@@ -1,759 +1,349 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel de Administração - Ponto</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Inter', sans-serif; display: flex; flex-direction: column; min-height: 100vh; }
-        .modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.6); align-items: center; justify-content: center; }
-        .modal-content { background-color: #fefefe; margin: auto; padding: 2rem; border-radius: 0.5rem; width: 90%; max-width: 500px; }
-        main { flex-grow: 1; display: flex; align-items: center; justify-content: center; width: 100%; }
-        .loader {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #10B981;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        .editable { cursor: pointer; }
-        .editable:hover { background-color: #f3f4f6; }
-    </style>
-</head>
-<body class="bg-gray-100">
+// Três listas para gerenciar o fluxo do atendimento
+let agendamentosOriginal = [
+    { nome: "NATALIA DE ABREU FONSECA NUNES", horario: "09:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
+    { nome: "ANA JÚLIA DOS SANTOS ALIMATEIA", horario: "09:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
+    { nome: "ANDRESSA PEREIRA DE OLIVEIRA", horario: "09:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
+    { nome: "DRIELE BASILIO MARTINS PASSOS", horario: "09:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
+    { nome: "LEICIANA SILVA DOS SANTOS GOMES", horario: "09:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
+    { nome: "LARISSA RODRIGUES FERREIRA BRANDAO", horario: "09:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
+    { nome: "GRACE KELLY RODRIGUES DE MELO", horario: "09:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
+    { nome: "ARIANE LIMA DE MIRANDA", horario: "09:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
+    { nome: "MAIBA RAPHAEL MOREIRA MOURA", horario: "09:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
+    { nome: "JENNIFER", horario: "09:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
+    { nome: "TAYSA RAYANE BARBOZA SANTOS", horario: "10:00", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
+    { nome: "TAINA VIANA ROSA", horario: "10:00", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
+    { nome: "CAMILA DA SILVA VILAR", horario: "10:00", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
+    { nome: "NATÁLIA DA SILVA RODRIGUES", horario: "10:00", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
+    { nome: "JENIFFER CRISTINA LIMA DA SILVA", horario: "10:00", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
+    { nome: "KAMILE DA COSTA DE ALMEIDA", horario: "10:00", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
+    { nome: "MICHELLE JHENEFFER SILVA ARAUJO", horario: "10:00", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
+    { nome: "ANA BEATRIZ BIANCO DE AQUINO", horario: "10:00", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
+    { nome: "AGATHA CRISTIAN DE OLIVEIRA", horario: "10:00", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
+    { nome: "ROSELANE DOS SANTOS ANJOS LOURENÇO", horario: "10:00", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
+    { nome: "ANA BEATRIZ GUERRA DE OLIVEIRA", horario: "10:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
+    { nome: "TATIANE SILVA DE ANDRADE", horario: "10:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
+    { nome: "DANIELE MOTTA DA SILVA", horario: "10:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
+    { nome: "FLAVIANE VELASCO DE ARAUJO", horario: "10:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
+    { nome: "JOYCE LUZIA SAMPAIO DE SOUZA", horario: "10:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
+    { nome: "MARIA DA GUIA DOS SANTOS MARTINS", horario: "10:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
+    { nome: "ALINE DOS SANTOS SOUZA", horario: "10:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
+    { nome: "JAQUELINE DOS SANTOS BARROS", horario: "10:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
+    { nome: "THALITA DOS SANTOS SILVA", horario: "10:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
+    { nome: "ADRIELE DA SILVA DE SOUZA", horario: "10:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
+    { nome: "KETLINE KAROLAYNE MOTA RITO", horario: "11:00", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
+    { nome: "RAFAELA JULIANA SILVA DA MATA", horario: "11:00", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
+    { nome: "LAIZ OLIVEIRA DA ROSA RODRIGUES DE ARAUJO", horario: "11:00", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
+    { nome: "JÉSSICA ARAÚJO DA SILVA", horario: "11:00", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
+    { nome: "TATIANE MARTILIANO DA SILVA", horario: "11:00", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
+    { nome: "THAYNÁ DO NASCIMENTO CANDIDO", horario: "11:00", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
+    { nome: "SIMONE MELO", horario: "11:00", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
+    { nome: "ANDRESSA VITORIA ALVES PEREIRA DE MEDEIROS", horario: "11:00", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
+    { nome: "GRAZIELLE MARIA SIMAO BATISTA", horario: "11:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
+    { nome: "ANDRESSA NASCIMENTO DOS SANTOS", horario: "11:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
+    { nome: "FERNANDA RODRIGUES DA SILVA", horario: "11:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
+    { nome: "VICTORIA DA SILVA DE SOUZA", horario: "11:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
+    { nome: "BRUNA DOS ANJOS SOARES", horario: "11:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
+    { nome: "CASSIANE NICOLAU DA SILVA", horario: "11:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
+    { nome: "EVELYN FERRAZ DO NASCIMENTO", horario: "11:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
+    { nome: "IRIS DA SILVA DOS SANTOS", horario: "11:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
+    { nome: "BRUNNA SOARES DA SILVA", horario: "11:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
+    { nome: "ANA CONCEICAO DA SILVA OLIVEIRA", horario: "11:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
+    { nome: "ALESSANDRA DA SILVA FRANCISCO GONÇALVES", horario: "12:00", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
+    { nome: "JULIANA MACHADO DA SILVA", horario: "12:00", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
+    { nome: "MARISTELA ROSA DA SILVA", horario: "12:00", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
+    { nome: "CAMILA DE OLIVEIRA QUEIROZ", horario: "12:00", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
+    { nome: "MARILENE DA SILVA NEPOMUCENO", horario: "12:00", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
+    { nome: "POLLYANA RUSSEL PATROCINIO DUTRA", horario: "12:00", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
+    { nome: "JOYCE FARIA DE SOUZA", horario: "12:00", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
+    { nome: "BRUNA DE ALMEIDA FERREIRA", horario: "12:00", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
+    { nome: "LARISSA TEIXEIRA DE LUCENA", horario: "12:00", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
+    { nome: "CAROLINA DA CONCEIÇÃO", horario: "12:00", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
+    { nome: "FRANCISCA JAIRLA DA SILVA PEREIRA", horario: "12:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
+    { nome: "OSANA COSTA PEREIRA", horario: "12:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
+    { nome: "RICARDO JOSE DOS SANTOS DE CASTRO", horario: "12:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
+    { nome: "CIBELLE SILVA MARTINS", horario: "12:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
+    { nome: "RAYANE DOS SANTOS", horario: "12:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
+    { nome: "VIVIANE ALVES DE SOUZA", horario: "12:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
+    { nome: "RENATA CRISTINA EMILIANO BERNARDO", horario: "12:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
+    { nome: "MICHELE GREGORIO DOS SANTOS", horario: "12:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
+    { nome: "GREICE KELLY DOS ANJOS DE OLIVEIRA", horario: "12:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
+    { nome: "LARISSA LEONARDO REIS", horario: "13:00", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
+    { nome: "ALESSANDRA CARVALHAES DE JESUS", horario: "13:00", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
+    { nome: "MYRELA DE JESUS DA SILVA", horario: "13:00", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
+    { nome: "VICTORIA MIRANDA MOREIRA", horario: "13:00", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
+    { nome: "OLINDA SILVA DE SOUSA", horario: "13:00", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
+    { nome: "ALINE MENDONCA DA CONCEICAO", horario: "13:00", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
+    { nome: "RAYANE CRISTINA DE CARVALHO", horario: "13:00", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
+    { nome: "ROBERTA DOS SANTOS TEODORO", horario: "13:00", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
+    { nome: "DÉBORA SANTOS SILVA LIMA", horario: "13:00", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
+    { nome: "THAIZA SOUZA DE QUEIROZ", horario: "13:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
+    { nome: "GABRIELE LORRANE GONÇALVES DE OLIVEIRA MODESTO", horario: "13:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
+    { nome: "ESTEFFANY NATALIA ALEXANDRE NUNES", horario: "13:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
+    { nome: "SILVANA MIGUEL AUGUSTO", horario: "13:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
+    { nome: "DAYANE PEREIRA BARBOSA", horario: "13:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
+    { nome: "TATIANE PEDRO DIAS", horario: "13:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
+    { nome: "ALESSANDRA DA SILVA DA CRUZ", horario: "13:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
+    { nome: "VIVIAN SILVA DE SOUZA", horario: "13:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
+    { nome: "RENATA DO NASCIMENTO MARQUES", horario: "13:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
+    { nome: "CAMILA DOS SANTOS MARANHÃO DE CASTRO", horario: "13:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null }
+];
+let agendamentosEspera = [];
+let agendamentosAtendidos = [];
 
-    <main class="py-12 px-4">
-        <!-- Tela de Login -->
-        <div id="login-screen" class="w-full max-w-md">
-            <div class="bg-white p-8 rounded-lg shadow-md space-y-6">
-                <div class="flex flex-col items-center">
-                    <img src="https://raw.githubusercontent.com/alexdovale/calculo-mensuracao-codoc/main/logo.png" alt="Logotipo da Empresa" class="mb-4 h-12">
-                    <h2 class="text-center text-xl font-bold text-gray-700">COORDENAÇÃO DE GESTÃO DOCUMENTAL</h2>
-                    <p class="mt-2 text-center text-2xl font-extrabold text-gray-900">Painel do Administrador</p>
-                </div>
-                <form id="login-form" class="space-y-6" onsubmit="return false;">
-                    <div><input id="email" type="email" autocomplete="email" required class="w-full px-3 py-2 border rounded-md focus:ring-green-500 focus:border-green-500" placeholder="Seu e-mail"></div>
-                    <div><input id="password" type="password" autocomplete="current-password" required class="w-full px-3 py-2 border rounded-md focus:ring-green-500 focus:border-green-500" placeholder="Sua senha"></div>
-                    <p id="login-error" class="text-sm text-red-600"></p>
-                    <div><button type="submit" class="w-full py-2 px-4 rounded-md text-white bg-green-600 hover:bg-green-700">Entrar</button></div>
-                    <div class="text-sm text-center"><a href="#" id="forgot-password-link" class="font-medium text-green-600 hover:text-green-500">Esqueceu sua senha?</a></div>
-                </form>
-            </div>
-        </div>
+// Funções de Ações
+function adicionarNovo() {
+    const nome = document.getElementById('nomeNovo').value;
+    const horario = document.getElementById('horarioNovo').value;
 
-        <!-- Tela Principal do Admin -->
-        <div id="app-screen" class="hidden w-full max-w-6xl">
-            <div class="bg-white p-4 sm:p-8 rounded-lg shadow-md space-y-6">
-                <div class="flex flex-wrap justify-between items-center gap-4">
-                    <div class="flex items-center gap-4">
-                        <img src="https://raw.githubusercontent.com/alexdovale/calculo-mensuracao-codoc/main/logo.png" alt="Logotipo da Empresa" class="h-10">
-                        <div>
-                            <h1 class="text-2xl font-bold text-gray-900">Olá, <span id="user-name"></span>!</h1>
-                            <p id="header-date" class="text-gray-600"></p>
-                        </div>
-                    </div>
-                    <button id="logout-button" class="px-4 py-2 text-sm font-medium text-green-600 bg-green-100 rounded-md hover:bg-green-200">Sair</button>
-                </div>
+    if (nome && horario) {
+        agendamentosOriginal.push({
+            nome: nome.toUpperCase(),
+            horario: horario,
+            tipo: "Pensão em Alimentos para Filhos",
+            chegou: false,
+            horaChegada: null
+        });
+        agendamentosOriginal.sort((a, b) => a.horario.localeCompare(b.horario));
+        
+        renderizarListaOriginal();
+        document.getElementById('nomeNovo').value = '';
+        document.getElementById('horarioNovo').value = '';
+        alert(`${nome} foi adicionado(a) à lista de agendamentos.`);
+    } else {
+        alert("Por favor, preencha o nome e o horário para adicionar à lista.");
+    }
+}
 
-                <div class="space-y-6">
-                    <div>
-                        <h2 class="text-xl font-bold mb-4">Relatórios de Ponto</h2>
-                        <select id="user-dropdown" class="w-full p-2 border rounded-md mb-4"></select>
-                        <div class="flex flex-wrap gap-4 items-center">
-                            <input type="month" id="month-selector" class="p-2 border rounded-md">
-                            <button id="generate-report-btn" class="py-2 px-4 rounded-md text-white bg-green-600 hover:bg-green-700">Gerar Relatório</button>
-                            <button id="download-pdf-btn" class="py-2 px-4 rounded-md text-white bg-blue-600 hover:bg-blue-700 hidden">Baixar PDF</button>
-                        </div>
-                    </div>
-                    
-                    <div id="reports-container">
-                        <h3 id="report-title" class="text-lg font-medium">Histórico de Registros</h3>
-                        <div class="mt-4 overflow-x-auto">
-                            <table class="min-w-full divide-y divide-gray-200">
-                                <thead id="report-table-head" class="bg-gray-50"></thead>
-                                <tbody id="report-table-body" class="bg-white divide-y divide-gray-200"></tbody>
-                            </table>
-                            <div id="monthly-balance" class="mt-4 p-4 bg-gray-100 rounded-md font-bold text-center hidden"></div>
-                            <!-- SEÇÃO DE OCORRÊNCIAS ATUALIZADA -->
-                            <div id="occurrence-section" class="mt-4 hidden">
-                                <label for="occurrence-details" class="block text-sm font-medium text-gray-700 mb-1">Registro de Ocorrência:</label>
-                                <textarea id="occurrence-details" rows="3" class="w-full p-2 border rounded-md" placeholder="Digite aqui qualquer ocorrência para incluir no relatório..."></textarea>
-                                <div class="flex justify-end items-center mt-2">
-                                    <span id="occurrence-status" class="text-sm text-gray-500 mr-4"></span>
-                                    <button id="save-occurrence-btn" class="py-1 px-3 rounded-md text-sm text-white bg-indigo-600 hover:bg-indigo-700">Salvar Ocorrência</button>
-                                </div>
-                            </div>
-                            <p id="no-report-message" class="text-center py-4 text-gray-500">Selecione um funcionário para ver o relatório.</p>
-                        </div>
-                    </div>
-
-                    <div class="mt-8">
-                        <h3 class="text-lg font-medium">Solicitações de Funcionários</h3>
-                        <div class="mt-4 overflow-x-auto">
-                            <table class="min-w-full divide-y divide-gray-200">
-                                <thead class="bg-gray-50">
-                                    <tr>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Funcionário</th>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Data</th>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Mensagem</th>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Ações</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="request-table-body" class="bg-white divide-y divide-gray-200"></tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </main>
-
-    <footer class="w-full bg-white p-6 shadow-inner">
-        <div class="text-center text-sm text-gray-600">
-            <p class="font-bold">Defensoria Pública do Estado do Rio de Janeiro</p>
-            <p>Sede Administrativa - Coordenação de Gestão Documental</p>
-            <p>Email: codoc@defensoria.rj.def.br</p>
-            <p>Avenida Marechal Câmara, 314 - CEP 20020-080 - Centro, RJ</p>
-            <p class="mt-2 text-xs text-gray-500">Desenvolvido por Alex do Vale</p>
-        </div>
-    </footer>
+function marcarPresenca(index) {
+    const horaChegadaInput = document.getElementById('horaChegadaGlobal');
+    if (!horaChegadaInput.value) {
+        alert("Por favor, insira a hora de chegada primeiro.");
+        return;
+    }
     
-    <!-- Modals -->
-    <div id="forgot-password-modal" class="modal">
-        <div class="modal-content"><span id="close-forgot-modal-button" class="float-right text-2xl font-bold cursor-pointer">&times;</span><h3 class="text-lg font-medium mb-4">Redefinir Senha</h3><p class="text-sm text-gray-600 mb-4">Digite seu e-mail para receber um link de redefinição.</p><form id="forgot-password-form"><input id="forgot-email" type="email" required placeholder="Seu e-mail" class="w-full px-3 py-2 border rounded-md"><button type="submit" class="mt-4 w-full py-2 px-4 rounded-md text-white bg-green-600 hover:bg-green-700">Enviar Link</button></form><p id="modal-message" class="text-sm mt-4 text-center"></p></div>
-    </div>
-    <div id="delete-confirm-modal" class="modal">
-        <div class="modal-content">
-            <h3 class="text-lg font-medium mb-4">Confirmar Exclusão</h3>
-            <p class="text-sm text-gray-600 mb-4">Tem certeza que deseja apagar este registro de ponto? Esta ação não pode ser desfeita.</p>
-            <div class="flex justify-end gap-4">
-                <button id="cancel-delete-btn" class="py-2 px-4 rounded-md text-gray-700 bg-gray-200 hover:bg-gray-300">Cancelar</button>
-                <button id="confirm-delete-btn" class="py-2 px-4 rounded-md text-white bg-red-600 hover:bg-red-700">Apagar</button>
-            </div>
-        </div>
-    </div>
-    <div id="edit-modal" class="modal">
-        <div class="modal-content">
-            <h3 class="text-lg font-medium mb-4">Editar Registro de Ponto</h3>
-            <div class="mb-4">
-                <label for="edit-time-input" class="block text-sm font-medium text-gray-700 mb-1">Horário:</label>
-                <input type="time" id="edit-time-input" class="w-full px-3 py-2 border rounded-md">
-            </div>
-            <div class="flex justify-end gap-4">
-                <button id="cancel-edit-btn" class="py-2 px-4 rounded-md text-gray-700 bg-gray-200 hover:bg-gray-300">Cancelar</button>
-                <button id="save-edit-btn" class="py-2 px-4 rounded-md text-white bg-green-600 hover:bg-green-700">Salvar</button>
-            </div>
-        </div>
-    </div>
+    const [item] = agendamentosOriginal.splice(index, 1);
+    item.chegou = true;
+    item.horaChegada = horaChegadaInput.value;
+    agendamentosEspera.push(item);
 
-    <!-- SCRIPTS PARA PDF -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
+    renderizarListaOriginal();
+    renderizarListaEspera();
+    
+    alert(`Presença de ${item.nome} marcada para as ${item.horaChegada}.`);
+}
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, onSnapshot, doc, getDoc, Timestamp, updateDoc, query, orderBy, getDocs, where, deleteDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-        
-        const appId = "1:582643132528:web:2d489ae3c23786152a2cb5";
-        const firebaseConfig = {
-            apiKey: "AIzaSyBqWlyh2vo0I_gRWysG2NYdz0gvopRO3SI",
-            authDomain: "sistema-ponto-v2.firebaseapp.com",
-            projectId: "sistema-ponto-v2",
-            storageBucket: "sistema-ponto-v2.appspot.com",
-            messagingSenderId: "582643132528",
-            appId: "1:582643132528:web:2d489ae3c23786152a2cb5",
-            measurementId: "G-E1SLMCBYZV"
+function marcarAtendido(index) {
+    const [item] = agendamentosEspera.splice(index, 1);
+    agendamentosAtendidos.push(item);
+    
+    renderizarListaEspera();
+    renderizarListaAtendidos();
+    
+    alert(`${item.nome} foi marcado como atendido.`);
+}
+
+function calcularDiferenca(horaAgendada, horaChegada) {
+    const [hA, mA] = horaAgendada.split(':').map(Number);
+    const [hC, mC] = horaChegada.split(':').map(Number);
+    
+    const diffMinutos = (hC * 60 + mC) - (hA * 60 + mA);
+    return diffMinutos;
+}
+
+function processarLista() {
+    const listaProcessada = agendamentosEspera.map(item => {
+        const diffMinutos = calcularDiferenca(item.horario, item.horaChegada);
+        return {
+            ...item,
+            diferenca: diffMinutos,
+            posicaoOriginal: agendamentosOriginal.findIndex(p => p.nome === item.nome)
         };
+    });
+
+    listaProcessada.sort((a, b) => {
+        const diffA = a.diferenca;
+        const diffB = b.diferenca;
+
+        const chegouNoPrazoA = diffA <= 0;
+        const chegouNoPrazoB = diffB <= 0;
+        if (chegouNoPrazoA && !chegouNoPrazoB) return -1;
+        if (!chegouNoPrazoA && chegouNoPrazoB) return 1;
+
+        const atrasoLeveA = diffA > 0 && diffA <= 20;
+        const atrasoLeveB = diffB > 0 && diffB <= 20;
+        if (chegouNoPrazoA && atrasoLeveB) return -1;
+        if (atrasoLeveA && chegouNoPrazoB) return 1;
+
+        const atrasoGraveA = diffA >= 30;
+        const atrasoGraveB = diffB >= 30;
+        if (atrasoLeveA && atrasoGraveB) return -1;
+        if (atrasoGraveA && atrasoLeveB) return 1;
+        if (chegouNoPrazoA && atrasoGraveB) return -1;
+        if (atrasoGraveA && chegouNoPrazoB) return 1;
         
-        let app, auth, db;
-        try { 
-            app = initializeApp(firebaseConfig); 
-            auth = getAuth(app); 
-            db = getFirestore(app); 
-        } catch (e) { 
-            document.body.innerHTML = `<div class="text-red-500 p-8">Erro de configuração do Firebase.</div>`; 
-        }
+        const ordemOriginalA = agendamentosOriginal.findIndex(p => p.nome === a.nome);
+        const ordemOriginalB = agendamentosOriginal.findIndex(p => p.nome === b.nome);
+        return ordemOriginalA - ordemOriginalB;
+    });
 
-        const ui = {
-            loginScreen: document.getElementById('login-screen'), appScreen: document.getElementById('app-screen'),
-            loginForm: document.getElementById('login-form'), loginError: document.getElementById('login-error'),
-            userNameSpan: document.getElementById('user-name'),
-            logoutButton: document.getElementById('logout-button'),
-            reportsContainer: document.getElementById('reports-container'),
-            requestTableBody: document.getElementById('request-table-body'),
-            userDropdown: document.getElementById('user-dropdown'),
-            reportTableHead: document.getElementById('report-table-head'),
-            reportTableBody: document.getElementById('report-table-body'),
-            noReportMessage: document.getElementById('no-report-message'),
-            monthSelector: document.getElementById('month-selector'),
-            generateReportBtn: document.getElementById('generate-report-btn'),
-            downloadPdfBtn: document.getElementById('download-pdf-btn'),
-            monthlyBalance: document.getElementById('monthly-balance'),
-            reportTitle: document.getElementById('report-title'),
-            deleteConfirmModal: document.getElementById('delete-confirm-modal'),
-            cancelDeleteBtn: document.getElementById('cancel-delete-btn'),
-            confirmDeleteBtn: document.getElementById('confirm-delete-btn'),
-            editModal: document.getElementById('edit-modal'),
-            editTimeInput: document.getElementById('edit-time-input'),
-            cancelEditBtn: document.getElementById('cancel-edit-btn'),
-            saveEditBtn: document.getElementById('save-edit-btn'),
-            forgot: { modal: document.getElementById('forgot-password-modal'), link: document.getElementById('forgot-password-link'), close: document.getElementById('close-forgot-modal-button'), form: document.getElementById('forgot-password-form'), email: document.getElementById('forgot-email'), msg: document.getElementById('modal-message') },
-            occurrenceSection: document.getElementById('occurrence-section'),
-            occurrenceDetails: document.getElementById('occurrence-details'),
-            saveOccurrenceBtn: document.getElementById('save-occurrence-btn'),
-            occurrenceStatus: document.getElementById('occurrence-status'),
-        };
+    renderizarTabelaPDFEspera(listaProcessada);
+}
 
-        let unsubscribe = { users: null, requests: null, entries: null };
-        let allUsers = [];
-        let recordToEdit = null;
-        let recordToDelete = null;
 
-        onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                const userDoc = await getDoc(doc(db, "users", user.uid));
-                if (userDoc.exists() && userDoc.data().role) {
-                    const userRole = userDoc.data().role;
-                    const userTeam = userDoc.data().team;
-                    if (userRole === 'general_manager' || userRole === 'nupap_manager' || userRole === 'nudof_manager') {
-                        ui.loginScreen.classList.add('hidden');
-                        ui.appScreen.classList.remove('hidden');
-                        ui.userNameSpan.textContent = userDoc.data().name;
-                        listenToFirebase(userRole, userTeam);
-                    } else {
-                        ui.loginError.textContent = "Acesso negado. Apenas gerentes podem acessar esta página.";
-                        signOut(auth);
-                    }
-                } else {
-                    ui.loginError.textContent = "Perfil de usuário não encontrado ou incompleto.";
-                    signOut(auth);
-                }
-            } else {
-                ui.loginScreen.classList.remove('hidden');
-                ui.appScreen.classList.add('hidden');
-                if (unsubscribe.users) unsubscribe.users();
-                if (unsubscribe.requests) unsubscribe.requests();
-                if (unsubscribe.entries) unsubscribe.entries();
-            }
-        });
+// Funções de Renderização
+function renderizarListaOriginal() {
+    const listaDiv = document.getElementById('lista-original');
+    listaDiv.innerHTML = '';
+    agendamentosOriginal.forEach((item, index) => {
+        const itemDiv = document.createElement('div');
+        itemDiv.className = 'item-agendamento';
+        itemDiv.innerHTML = `
+            <div class="info">
+                <span>Nome: ${item.nome}</span>
+                <span>Horário: ${item.horario}</span>
+                <span>Tipo: ${item.tipo}</span>
+            </div>
+            <button class="marcar-presenca" onclick="marcarPresenca(${index})">Marcar Presença</button>
+        `;
+        listaDiv.appendChild(itemDiv);
+    });
+}
 
-        function listenToFirebase(role, team) {
-            if (unsubscribe.users) unsubscribe.users();
-            const usersRef = collection(db, 'users');
-            unsubscribe.users = onSnapshot(usersRef, (usersSnapshot) => {
-                allUsers = usersSnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
-                renderUserDropdown(allUsers, role, team);
-                
-                if (unsubscribe.requests) unsubscribe.requests();
-                const requestsRef = collection(db, `/artifacts/${appId}/requests`);
-                unsubscribe.requests = onSnapshot(requestsRef, (requestsSnapshot) => {
-                    const requests = requestsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                    renderRequestsTable(requests, allUsers, role, team);
-                });
-            });
-        }
+function renderizarListaEspera() {
+    const listaDiv = document.getElementById('lista-espera');
+    listaDiv.innerHTML = '';
+    agendamentosEspera.forEach((item, index) => {
+        const diffMinutos = calcularDiferenca(item.horario, item.horaChegada);
+        const diferencaFormatada = `${diffMinutos} min`;
+        const itemDiv = document.createElement('div');
+        itemDiv.className = 'item-agendamento';
+        itemDiv.innerHTML = `
+            <div class="info">
+                <span>Nome: ${item.nome}</span>
+                <span>Horário: ${item.horario}</span>
+                <span>Hora Chegada: ${item.horaChegada}</span>
+                <span>Diferença: ${diferencaFormatada}</span>
+            </div>
+            <button class="atendido" onclick="marcarAtendido(${index})">Marcar Atendido</button>
+        `;
+        listaDiv.appendChild(itemDiv);
+    });
+}
 
-        function renderUserDropdown(users, role, team) {
-            ui.userDropdown.innerHTML = '';
-            const allOption = document.createElement('option');
-            allOption.value = '';
-            allOption.textContent = 'Selecione um funcionário';
-            ui.userDropdown.appendChild(allOption);
-            
-            users.filter(u => u.role === 'employee').forEach(user => {
-                if (role === 'general_manager' || (role === 'nupap_manager' && user.team === 'nupap') || (role === 'nudof_manager' && user.team === 'nudof')) {
-                    const option = document.createElement('option');
-                    option.value = user.id;
-                    option.textContent = user.name;
-                    ui.userDropdown.appendChild(option);
-                }
-            });
-        }
+function renderizarListaAtendidos() {
+    const listaDiv = document.getElementById('lista-atendidos');
+    listaDiv.innerHTML = '';
+    agendamentosAtendidos.forEach(item => {
+        const itemDiv = document.createElement('div');
+        itemDiv.className = 'item-agendamento atendido-item';
+        itemDiv.innerHTML = `
+            <div class="info">
+                <span>Nome: ${item.nome}</span>
+                <span>Horário: ${item.horario}</span>
+                <span>Tipo: ${item.tipo}</span>
+            </div>
+        `;
+        listaDiv.appendChild(itemDiv);
+    });
+}
+
+// Funções para o PDF
+function salvarPDFOriginal() {
+    renderizarTabelaPDFOriginal(agendamentosOriginal);
+    alert('A prévia da lista original está pronta. Use a função de impressão do seu navegador.');
+    window.print();
+}
+
+function renderizarTabelaPDFOriginal(lista) {
+    document.getElementById('saida-pdf-espera').style.display = 'none';
+    document.getElementById('saida-pdf-atendidos').style.display = 'none';
+
+    const tabelaPDF = document.getElementById('tabela-pdf-original').getElementsByTagName('tbody')[0];
+    tabelaPDF.innerHTML = '';
+    
+    lista.forEach(item => {
+        const newRow = tabelaPDF.insertRow();
+        const cell1 = newRow.insertCell(0);
+        const cell2 = newRow.insertCell(1);
+        const cell3 = newRow.insertCell(2);
         
-        ui.generateReportBtn.addEventListener('click', async () => {
-            const selectedUserId = ui.userDropdown.value;
-            const selectedDate = ui.monthSelector.value;
-            if (selectedUserId && selectedDate) {
-                const [year, month] = selectedDate.split('-');
-                await generateAndRenderMonthlyReport(selectedUserId, parseInt(month), parseInt(year));
-            } else {
-                ui.reportTitle.textContent = 'Histórico de Registros';
-                ui.reportTableBody.innerHTML = '';
-                ui.reportTableHead.innerHTML = '';
-                ui.monthlyBalance.classList.add('hidden');
-                ui.downloadPdfBtn.classList.add('hidden');
-                ui.occurrenceSection.classList.add('hidden');
-                ui.occurrenceDetails.value = '';
-                ui.occurrenceStatus.textContent = '';
-                ui.noReportMessage.classList.remove('hidden');
-                ui.noReportMessage.textContent = "Por favor, selecione um funcionário e um mês para gerar o relatório.";
-            }
-        });
+        cell1.textContent = item.nome;
+        cell2.textContent = item.horario;
+        cell3.textContent = item.tipo;
+    });
+    
+    document.getElementById('saida-pdf-original').style.display = 'block';
+}
 
-        async function generateAndRenderMonthlyReport(userId, month, year) {
-            ui.reportTitle.textContent = `Carregando dados...`;
-            ui.reportTableBody.innerHTML = '';
-            ui.monthlyBalance.classList.add('hidden');
-            ui.downloadPdfBtn.classList.add('hidden');
-            ui.noReportMessage.classList.add('hidden');
+function salvarPDFEspera() {
+    alert('A prévia da lista de espera está pronta. Use a função de impressão do seu navegador.');
+    window.print();
+}
 
-            const entriesRef = collection(db, 'artifacts', appId, 'users', userId, 'time_entries');
-            const entriesQuery = query(entriesRef, orderBy("timestamp", "asc"));
-            
-            const entriesSnapshot = await getDocs(entriesQuery);
-            const allEntries = entriesSnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
+function renderizarTabelaPDFEspera(lista) {
+    document.getElementById('saida-pdf-original').style.display = 'none';
+    document.getElementById('saida-pdf-atendidos').style.display = 'none';
 
-            const filteredEntries = allEntries.filter(entry => {
-                const entryDate = entry.timestamp.toDate();
-                return entryDate.getFullYear() === year && (entryDate.getMonth() + 1) === month;
-            });
+    const tabelaPDF = document.getElementById('tabela-pdf-espera').getElementsByTagName('tbody')[0];
+    tabelaPDF.innerHTML = '';
+    if (lista.length === 0) {
+        document.getElementById('saida-pdf-espera').style.display = 'none';
+        return;
+    }
+    lista.forEach(item => {
+        const newRow = tabelaPDF.insertRow();
+        const cell1 = newRow.insertCell(0);
+        const cell2 = newRow.insertCell(1);
+        const cell3 = newRow.insertCell(2);
+        const cell4 = newRow.insertCell(3);
+        const cell5 = newRow.insertCell(4);
 
-            if (filteredEntries.length === 0) {
-                ui.reportTitle.textContent = `Relatório para ${allUsers.find(u => u.id === userId)?.name}`;
-                ui.noReportMessage.classList.remove('hidden');
-                ui.noReportMessage.textContent = "Nenhum registro encontrado para o mês selecionado.";
-                ui.occurrenceSection.classList.remove('hidden');
-                return;
-            }
+        const diferencaFormatada = `${item.diferenca} min`;
 
-            renderMonthlyReportTable(filteredEntries, userId, month, year);
-        }
+        cell1.textContent = '✔️';
+        cell2.textContent = item.nome;
+        cell3.textContent = item.horario;
+        cell4.textContent = item.tipo;
+        cell5.textContent = diferencaFormatada;
+    });
+    document.getElementById('saida-pdf-espera').style.display = 'block';
+}
 
-        function renderMonthlyReportTable(entries, userId, month, year) {
-            const userName = allUsers.find(u => u.id === userId)?.name;
-            const monthName = new Date(year, month - 1, 1).toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' });
-            
-            ui.reportTitle.textContent = `Relatório para ${userName} - ${monthName}`;
-            ui.reportTableBody.innerHTML = '';
-            ui.reportTableHead.innerHTML = `
-                <tr>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Data</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Dia da Semana</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Entradas</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Saídas</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Saldo do Dia</th>
-                </tr>
-            `;
-            ui.noReportMessage.classList.add('hidden');
-            
-            const entriesByDay = entries.reduce((acc, entry) => {
-                const date = entry.timestamp.toDate().toLocaleDateString('pt-BR');
-                if (!acc[date]) acc[date] = [];
-                acc[date].push(entry);
-                return acc;
-            }, {});
+function salvarPDFAtendidos() {
+    renderizarTabelaPDFAtendidos(agendamentosAtendidos);
+    alert('A prévia da lista de atendidos está pronta. Use a função de impressão do seu navegador.');
+    window.print();
+}
 
-            let totalMonthlyBalanceMs = 0;
+function renderizarTabelaPDFAtendidos(lista) {
+    document.getElementById('saida-pdf-original').style.display = 'none';
+    document.getElementById('saida-pdf-espera').style.display = 'none';
 
-            Object.keys(entriesByDay).sort((a, b) => new Date(a.split('/').reverse().join('-')) - new Date(b.split('/').reverse().join('-'))).forEach(date => {
-                const currentDate = new Date(date.split('/').reverse().join('-'));
-                const dayOfWeek = currentDate.toLocaleDateString('pt-BR', { weekday: 'short' });
-                const dayIndex = currentDate.getDay();
-                const isWeekend = dayIndex === 0 || dayIndex === 6;
-
-                const dayEntries = entriesByDay[date];
-                const ins = dayEntries.filter(e => e.type === 'in').map(e => e.timestamp.toDate().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })).join(', ');
-                const outs = dayEntries.filter(e => e.type === 'out').map(e => e.timestamp.toDate().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })).join(', ');
-                
-                let dailyWorkedMs = 0;
-                const sortedEntries = dayEntries.sort((a,b) => a.timestamp.toMillis() - b.timestamp.toMillis());
-                for (let i = 0; i < sortedEntries.length - 1; i += 2) {
-                    if (sortedEntries[i].type === 'in' && sortedEntries[i+1] && sortedEntries[i+1].type === 'out') {
-                        dailyWorkedMs += sortedEntries[i+1].timestamp.toMillis() - sortedEntries[i].timestamp.toMillis();
-                    }
-                }
-
-                let dailyBalanceText = '---', dailyBalanceClass = 'text-gray-700';
-                
-                if (isWeekend) {
-                    dailyBalanceText = 'Fim de Semana';
-                    dailyBalanceClass = 'text-gray-500 italic';
-                } else if (dayEntries.length % 2 === 0 && dayEntries.length > 0) {
-                    const dailyBalanceMs = dailyWorkedMs - (6 * 3600 * 1000);
-                    if (Math.abs(dailyBalanceMs) > (15 * 60 * 1000)) {
-                        totalMonthlyBalanceMs += dailyBalanceMs;
-                    }
-                    dailyBalanceText = Math.abs(dailyBalanceMs) <= (15 * 60 * 1000) ? '00:00' : formatMilliseconds(dailyBalanceMs, true);
-                    dailyBalanceClass = dailyBalanceMs >= 0 ? 'text-green-600' : 'text-red-600';
-                }
-
-                const row = document.createElement('tr');
-                row.innerHTML = `<td class="px-6 py-4">${date}</td><td class="px-6 py-4 capitalize">${dayOfWeek.replace('.','')}</td><td class="px-6 py-4">${ins}</td><td class="px-6 py-4">${outs}</td><td class="px-6 py-4 font-medium ${dailyBalanceClass}">${dailyBalanceText}</td>`;
-                ui.reportTableBody.appendChild(row);
-            });
-
-            ui.monthlyBalance.textContent = `Saldo total do mês: ${formatMilliseconds(totalMonthlyBalanceMs, true)}`;
-            ui.monthlyBalance.className = `mt-4 p-4 rounded-md font-bold text-center ${totalMonthlyBalanceMs >= 0 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`;
-            ui.monthlyBalance.classList.remove('hidden');
-            ui.downloadPdfBtn.classList.remove('hidden');
-            ui.occurrenceSection.classList.remove('hidden');
-        }
+    const tabelaPDF = document.getElementById('tabela-pdf-atendidos').getElementsByTagName('tbody')[0];
+    tabelaPDF.innerHTML = '';
+    
+    if (lista.length === 0) {
+        document.getElementById('saida-pdf-atendidos').style.display = 'none';
+        return;
+    }
+    
+    lista.forEach(item => {
+        const newRow = tabelaPDF.insertRow();
+        const cell1 = newRow.insertCell(0);
+        const cell2 = newRow.insertCell(1);
+        const cell3 = newRow.insertCell(2);
         
-        ui.userDropdown.addEventListener('change', async (e) => {
-            const selectedUserId = e.target.value;
-            ui.monthlyBalance.classList.add('hidden');
-            ui.downloadPdfBtn.classList.add('hidden');
-            
-            if (selectedUserId) {
-                ui.reportTitle.textContent = `Carregando histórico...`;
-                ui.noReportMessage.classList.add('hidden');
-                
-                const selectedDate = ui.monthSelector.value;
-                const [year, month] = selectedDate.split('-');
-                await loadOccurrence(selectedUserId, parseInt(month, 10), parseInt(year, 10));
-                ui.occurrenceSection.classList.remove('hidden');
+        cell1.textContent = item.nome;
+        cell2.textContent = item.horario;
+        cell3.textContent = item.tipo;
+    });
+    
+    document.getElementById('saida-pdf-atendidos').style.display = 'block';
+}
 
-                const entriesRef = collection(db, 'artifacts', appId, 'users', selectedUserId, 'time_entries');
-                const entriesQuery = query(entriesRef, orderBy("timestamp", "asc"));
-                
-                if (unsubscribe.entries) unsubscribe.entries();
-                unsubscribe.entries = onSnapshot(entriesQuery, (snapshot) => {
-                    const allEntries = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
-                    renderDetailedReportTable(allEntries, selectedUserId);
-                });
-            } else {
-                ui.reportTableBody.innerHTML = '';
-                ui.reportTableHead.innerHTML = '';
-                ui.reportTitle.textContent = 'Histórico de Registros';
-                ui.occurrenceSection.classList.add('hidden');
-                ui.occurrenceDetails.value = '';
-                ui.occurrenceStatus.textContent = '';
-                ui.noReportMessage.classList.remove('hidden');
-                ui.noReportMessage.textContent = "Selecione um funcionário para ver o relatório.";
-            }
-        });
-        
-        ui.monthSelector.addEventListener('change', async (e) => {
-            const selectedUserId = ui.userDropdown.value;
-            if (selectedUserId) {
-                const selectedDate = e.target.value;
-                const [year, month] = selectedDate.split('-');
-                await loadOccurrence(selectedUserId, parseInt(month, 10), parseInt(year, 10));
-            }
-        });
-
-        function renderDetailedReportTable(entries, userId) {
-            ui.downloadPdfBtn.classList.add('hidden');
-            ui.reportTableBody.innerHTML = '';
-            ui.reportTableHead.innerHTML = `
-                <tr>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Data</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Horário</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Tipo</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Ações</th>
-                </tr>
-            `;
-            ui.noReportMessage.classList.add('hidden');
-            ui.reportTitle.textContent = `Histórico Completo para ${allUsers.find(u => u.id === userId)?.name}`;
-
-            if (entries.length === 0) {
-                 ui.noReportMessage.classList.remove('hidden');
-                 ui.noReportMessage.textContent = 'Nenhum registro encontrado para este funcionário.';
-                 return;
-            }
-            
-            entries.forEach(entry => {
-                const row = document.createElement('tr');
-                const entryDate = entry.timestamp.toDate();
-                const formattedDate = entryDate.toLocaleDateString('pt-BR');
-                const formattedTime = entryDate.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
-                const entryType = entry.type === 'in' ? 'Entrada' : 'Saída';
-                
-                row.innerHTML = `
-                    <td class="px-6 py-4 whitespace-nowrap">${formattedDate}</td>
-                    <td class="px-6 py-4 whitespace-nowrap editable" data-record-id="${entry.id}" data-user-id="${userId}" data-original-time="${entryDate.toISOString()}">${formattedTime}</td>
-                    <td class="px-6 py-4 whitespace-nowrap">${entryType}</td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <button class="delete-btn text-red-600 hover:text-red-900" data-record-id="${entry.id}" data-user-id="${userId}">
-                            Apagar
-                        </button>
-                    </td>
-                `;
-                ui.reportTableBody.appendChild(row);
-            });
-            
-            document.querySelectorAll('.delete-btn').forEach(button => {
-                button.addEventListener('click', (e) => {
-                    recordToDelete = {
-                        userId: e.target.dataset.userId,
-                        recordId: e.target.dataset.recordId
-                    };
-                    ui.deleteConfirmModal.style.display = 'flex';
-                });
-            });
-            
-            document.querySelectorAll('.editable').forEach(cell => {
-                cell.addEventListener('click', (e) => {
-                    const originalTime = new Date(e.target.dataset.originalTime);
-                    const hours = originalTime.getHours().toString().padStart(2, '0');
-                    const minutes = originalTime.getMinutes().toString().padStart(2, '0');
-                    ui.editTimeInput.value = `${hours}:${minutes}`;
-                    recordToEdit = {
-                        userId: e.target.dataset.userId,
-                        recordId: e.target.dataset.recordId,
-                        date: originalTime,
-                    };
-                    ui.editModal.style.display = 'flex';
-                });
-            });
-        }
-        
-        ui.confirmDeleteBtn.addEventListener('click', async () => {
-            if (recordToDelete) {
-                const { userId, recordId } = recordToDelete;
-                try {
-                    await deleteDoc(doc(db, `artifacts/${appId}/users/${userId}/time_entries`, recordId));
-                } catch (error) {
-                    console.error("Erro ao apagar registro:", error);
-                } finally {
-                    recordToDelete = null;
-                    ui.deleteConfirmModal.style.display = 'none';
-                }
-            }
-        });
-
-        ui.cancelDeleteBtn.addEventListener('click', () => {
-            recordToDelete = null;
-            ui.deleteConfirmModal.style.display = 'none';
-        });
-
-        ui.saveEditBtn.addEventListener('click', async () => {
-            if (recordToEdit) {
-                const { userId, recordId, date } = recordToEdit;
-                const newTime = ui.editTimeInput.value;
-                const [newHours, newMinutes] = newTime.split(':').map(Number);
-                
-                const newDate = new Date(date);
-                newDate.setHours(newHours);
-                newDate.setMinutes(newMinutes);
-                newDate.setSeconds(0);
-
-                try {
-                    await updateDoc(doc(db, `artifacts/${appId}/users/${userId}/time_entries`, recordId), {
-                        timestamp: Timestamp.fromDate(newDate)
-                    });
-                } catch (error) {
-                    console.error("Erro ao editar registro:", error);
-                } finally {
-                    recordToEdit = null;
-                    ui.editModal.style.display = 'none';
-                }
-            }
-        });
-
-        ui.cancelEditBtn.addEventListener('click', () => {
-            recordToEdit = null;
-            ui.editModal.style.display = 'none';
-        });
-
-        function renderRequestsTable(requests, users, role, team) {
-            ui.requestTableBody.innerHTML = '';
-            requests.forEach(req => {
-                const user = users.find(u => u.id === req.userId);
-                if (!user) return;
-                
-                const isManagerForTeam = (role === 'nupap_manager' && user.team === 'nupap') || (role === 'nudof_manager' && user.team === 'nudof');
-                if (role === 'general_manager' || isManagerForTeam) {
-                    const statusClass = req.status === 'pending' ? 'bg-yellow-100 text-yellow-800' : req.status === 'approved' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800';
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td class="px-6 py-4">${req.userName}</td>
-                        <td class="px-6 py-4">${req.date}</td>
-                        <td class="px-6 py-4 text-xs font-semibold whitespace-nowrap"><span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${statusClass}">${req.status.toUpperCase()}</span></td>
-                        <td class="px-6 py-4">${req.text}</td>
-                        <td class="px-6 py-4 text-sm text-gray-500">
-                            ${req.status === 'pending' ? `<button class="approve-btn text-green-600 hover:text-green-900 mr-2" data-request-id="${req.id}">Aprovar</button> <button class="decline-btn text-red-600 hover:text-red-900" data-request-id="${req.id}">Recusar</button>` : '—'}
-                        </td>
-                    `;
-                    row.querySelector('.approve-btn')?.addEventListener('click', (e) => updateRequestStatus(e.target.dataset.requestId, 'approved'));
-                    row.querySelector('.decline-btn')?.addEventListener('click', (e) => updateRequestStatus(e.target.dataset.requestId, 'declined'));
-                    ui.requestTableBody.appendChild(row);
-                }
-            });
-        }
-
-        async function updateRequestStatus(requestId, status) {
-            const requestDocRef = doc(db, `/artifacts/${appId}/requests`, requestId);
-            await updateDoc(requestDocRef, { status });
-        }
-
-        function formatMilliseconds(ms, showSign = false) {
-            const isNegative = ms < 0;
-            if (isNegative) ms = -ms;
-            const hours = Math.floor(ms / 3600000);
-            const minutes = Math.floor((ms % 3600000) / 60000);
-            const sign = isNegative ? '-' : (showSign ? '+' : '');
-            return `${sign}${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
-        }
-        
-        async function loadOccurrence(userId, month, year) {
-            if (!userId || !month || !year) return;
-            ui.occurrenceDetails.value = '';
-            ui.occurrenceStatus.textContent = '';
-            try {
-                const reportId = `${year}-${String(month).padStart(2, '0')}`;
-                const reportDocRef = doc(db, 'artifacts', appId, 'users', userId, 'reports', reportId);
-                const reportDocSnap = await getDoc(reportDocRef);
-                if (reportDocSnap.exists()) {
-                    ui.occurrenceDetails.value = reportDocSnap.data().occurrenceText || '';
-                }
-            } catch (error) {
-                console.error("Erro ao carregar ocorrência:", error);
-            }
-        }
-
-        async function saveOccurrence() {
-            const selectedUserId = ui.userDropdown.value;
-            const selectedDate = ui.monthSelector.value;
-            if (!selectedUserId || !selectedDate) {
-                ui.occurrenceStatus.textContent = 'Selecione um funcionário e um mês.';
-                ui.occurrenceStatus.className = 'text-sm text-red-500 mr-4';
-                return;
-            }
-
-            const [year, month] = selectedDate.split('-');
-            const occurrenceText = ui.occurrenceDetails.value;
-            const reportId = `${year}-${month}`;
-            const reportDocRef = doc(db, 'artifacts', appId, 'users', selectedUserId, 'reports', reportId);
-
-            ui.occurrenceStatus.textContent = 'Salvando...';
-            ui.occurrenceStatus.className = 'text-sm text-gray-500 mr-4';
-
-            try {
-                await setDoc(reportDocRef, { 
-                    occurrenceText: occurrenceText 
-                }, { merge: true });
-
-                ui.occurrenceStatus.textContent = 'Salvo com sucesso!';
-                ui.occurrenceStatus.className = 'text-sm text-green-600 mr-4';
-                setTimeout(() => { ui.occurrenceStatus.textContent = ''; }, 3000);
-            } catch (error) {
-                console.error("Erro ao salvar ocorrência:", error);
-                ui.occurrenceStatus.textContent = 'Erro ao salvar.';
-                ui.occurrenceStatus.className = 'text-sm text-red-600 mr-4';
-            }
-        }
-        ui.saveOccurrenceBtn.addEventListener('click', saveOccurrence);
-
-        async function generatePdf() {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
-
-            const selectedUserId = ui.userDropdown.value;
-            const userName = allUsers.find(u => u.id === selectedUserId)?.name || 'Usuário';
-            const selectedDate = ui.monthSelector.value;
-            const [year, month] = selectedDate.split('-').map(Number);
-            const monthName = new Date(year, month - 1, 1).toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' });
-
-            doc.setFontSize(18);
-            doc.text(`Relatório de Ponto - ${userName}`, 14, 22);
-            doc.setFontSize(12);
-            doc.text(`Período: ${monthName}`, 14, 30);
-
-            const head = [['Data', 'Dia da Semana', 'Entradas', 'Saídas', 'Saldo do Dia']];
-            const body = [];
-            ui.reportTableBody.querySelectorAll('tr').forEach(row => {
-                const rowData = [];
-                row.querySelectorAll('td').forEach(cell => rowData.push(cell.innerText));
-                body.push(rowData);
-            });
-
-            doc.autoTable({
-                head: head,
-                body: body,
-                startY: 40,
-                theme: 'striped',
-                headStyles: { fillColor: [22, 160, 133] },
-            });
-
-            let finalY = doc.lastAutoTable.finalY;
-
-            const requestsRef = collection(db, `/artifacts/${appId}/requests`);
-            const q = query(requestsRef, where("userId", "==", selectedUserId), where("status", "==", "approved"));
-            const requestsSnapshot = await getDocs(q);
-            
-            const monthRequests = requestsSnapshot.docs
-                .map(doc => doc.data())
-                .filter(req => {
-                    if (!req.date) return false;
-                    const [reqDay, reqMonth, reqYear] = req.date.split('/');
-                    return parseInt(reqYear, 10) === year && parseInt(reqMonth, 10) === month;
-                });
-
-            if (monthRequests.length > 0) {
-                doc.setFontSize(14);
-                doc.text('Solicitações Autorizadas', 14, finalY + 15);
-
-                const requestsHead = [['Data', 'Motivo']];
-                const requestsBody = monthRequests.map(req => [req.date, req.text]);
-
-                doc.autoTable({
-                    head: requestsHead,
-                    body: requestsBody,
-                    startY: finalY + 18,
-                    theme: 'grid',
-                    headStyles: { fillColor: [44, 62, 80] },
-                });
-                finalY = doc.lastAutoTable.finalY;
-            }
-            
-            doc.setFontSize(12);
-            doc.setFont('helvetica', 'bold');
-            doc.text(ui.monthlyBalance.textContent, 14, finalY + 10);
-            
-            const occurrenceText = ui.occurrenceDetails.value;
-            doc.setFontSize(12);
-            doc.setFont('helvetica', 'bold');
-            doc.text('Registro de Ocorrências:', 14, finalY + 25);
-            doc.setLineWidth(0.2);
-            doc.setDrawColor(100); 
-            doc.rect(14, finalY + 28, 182, 30);
-
-            if (occurrenceText && occurrenceText.trim() !== '') {
-                doc.setFontSize(10);
-                doc.setFont('helvetica', 'normal');
-                const textLines = doc.splitTextToSize(occurrenceText, 178);
-                doc.text(textLines, 16, finalY + 33);
-            }
-            
-            const safeUserName = userName.replace(/\s+/g, '_').toLowerCase();
-            const fileName = `relatorio_${safeUserName}_${String(month).padStart(2, '0')}_${year}.pdf`;
-            doc.save(fileName);
-        }
-
-        ui.downloadPdfBtn.addEventListener('click', generatePdf);
-        ui.loginForm.addEventListener('submit', async (e) => { e.preventDefault(); ui.loginError.textContent = ''; try { await signInWithEmailAndPassword(auth, ui.loginForm.email.value, ui.loginForm.password.value); } catch (error) { ui.loginError.textContent = "E-mail ou senha inválidos."; } });
-        ui.logoutButton.addEventListener('click', () => signOut(auth));
-        
-        ui.forgot.link.addEventListener('click', (e) => { e.preventDefault(); ui.forgot.modal.style.display = 'flex'; });
-        ui.forgot.close.addEventListener('click', () => { ui.forgot.modal.style.display = 'none'; ui.forgot.msg.textContent = ''; });
-        ui.forgot.form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            ui.forgot.msg.textContent = 'Enviando...';
-            try {
-                await sendPasswordResetEmail(auth, ui.forgot.email.value);
-                ui.forgot.msg.textContent = 'Link de redefinição enviado para o seu e-mail!';
-                ui.forgot.msg.className = 'text-sm mt-4 text-center text-green-600';
-            } catch (error) {
-                ui.forgot.msg.textContent = 'Erro ao enviar e-mail. Verifique o endereço digitado.';
-                 ui.forgot.msg.className = 'text-sm mt-4 text-center text-red-600';
-            }
-        });
-        
-        document.getElementById('header-date').textContent = new Date().toLocaleDateString('pt-BR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-        const today = new Date();
-        const currentMonth = today.toISOString().substring(0, 7);
-        document.getElementById('month-selector').value = currentMonth;
-
-    </script>
-</body>
-</html>
+// Inicializa as listas ao carregar a página
+document.addEventListener("DOMContentLoaded", () => {
+    renderizarListaOriginal();
+    renderizarListaEspera();
+    renderizarListaAtendidos();
+});
