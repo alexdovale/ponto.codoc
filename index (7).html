@@ -1,349 +1,114 @@
-// Três listas para gerenciar o fluxo do atendimento
-let agendamentosOriginal = [
-    { nome: "NATALIA DE ABREU FONSECA NUNES", horario: "09:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
-    { nome: "ANA JÚLIA DOS SANTOS ALIMATEIA", horario: "09:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
-    { nome: "ANDRESSA PEREIRA DE OLIVEIRA", horario: "09:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
-    { nome: "DRIELE BASILIO MARTINS PASSOS", horario: "09:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
-    { nome: "LEICIANA SILVA DOS SANTOS GOMES", horario: "09:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
-    { nome: "LARISSA RODRIGUES FERREIRA BRANDAO", horario: "09:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
-    { nome: "GRACE KELLY RODRIGUES DE MELO", horario: "09:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
-    { nome: "ARIANE LIMA DE MIRANDA", horario: "09:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
-    { nome: "MAIBA RAPHAEL MOREIRA MOURA", horario: "09:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
-    { nome: "JENNIFER", horario: "09:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
-    { nome: "TAYSA RAYANE BARBOZA SANTOS", horario: "10:00", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
-    { nome: "TAINA VIANA ROSA", horario: "10:00", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
-    { nome: "CAMILA DA SILVA VILAR", horario: "10:00", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
-    { nome: "NATÁLIA DA SILVA RODRIGUES", horario: "10:00", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
-    { nome: "JENIFFER CRISTINA LIMA DA SILVA", horario: "10:00", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
-    { nome: "KAMILE DA COSTA DE ALMEIDA", horario: "10:00", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
-    { nome: "MICHELLE JHENEFFER SILVA ARAUJO", horario: "10:00", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
-    { nome: "ANA BEATRIZ BIANCO DE AQUINO", horario: "10:00", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
-    { nome: "AGATHA CRISTIAN DE OLIVEIRA", horario: "10:00", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
-    { nome: "ROSELANE DOS SANTOS ANJOS LOURENÇO", horario: "10:00", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
-    { nome: "ANA BEATRIZ GUERRA DE OLIVEIRA", horario: "10:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
-    { nome: "TATIANE SILVA DE ANDRADE", horario: "10:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
-    { nome: "DANIELE MOTTA DA SILVA", horario: "10:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
-    { nome: "FLAVIANE VELASCO DE ARAUJO", horario: "10:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
-    { nome: "JOYCE LUZIA SAMPAIO DE SOUZA", horario: "10:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
-    { nome: "MARIA DA GUIA DOS SANTOS MARTINS", horario: "10:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
-    { nome: "ALINE DOS SANTOS SOUZA", horario: "10:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
-    { nome: "JAQUELINE DOS SANTOS BARROS", horario: "10:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
-    { nome: "THALITA DOS SANTOS SILVA", horario: "10:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
-    { nome: "ADRIELE DA SILVA DE SOUZA", horario: "10:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
-    { nome: "KETLINE KAROLAYNE MOTA RITO", horario: "11:00", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
-    { nome: "RAFAELA JULIANA SILVA DA MATA", horario: "11:00", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
-    { nome: "LAIZ OLIVEIRA DA ROSA RODRIGUES DE ARAUJO", horario: "11:00", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
-    { nome: "JÉSSICA ARAÚJO DA SILVA", horario: "11:00", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
-    { nome: "TATIANE MARTILIANO DA SILVA", horario: "11:00", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
-    { nome: "THAYNÁ DO NASCIMENTO CANDIDO", horario: "11:00", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
-    { nome: "SIMONE MELO", horario: "11:00", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
-    { nome: "ANDRESSA VITORIA ALVES PEREIRA DE MEDEIROS", horario: "11:00", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
-    { nome: "GRAZIELLE MARIA SIMAO BATISTA", horario: "11:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
-    { nome: "ANDRESSA NASCIMENTO DOS SANTOS", horario: "11:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
-    { nome: "FERNANDA RODRIGUES DA SILVA", horario: "11:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
-    { nome: "VICTORIA DA SILVA DE SOUZA", horario: "11:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
-    { nome: "BRUNA DOS ANJOS SOARES", horario: "11:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
-    { nome: "CASSIANE NICOLAU DA SILVA", horario: "11:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
-    { nome: "EVELYN FERRAZ DO NASCIMENTO", horario: "11:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
-    { nome: "IRIS DA SILVA DOS SANTOS", horario: "11:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
-    { nome: "BRUNNA SOARES DA SILVA", horario: "11:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
-    { nome: "ANA CONCEICAO DA SILVA OLIVEIRA", horario: "11:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
-    { nome: "ALESSANDRA DA SILVA FRANCISCO GONÇALVES", horario: "12:00", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
-    { nome: "JULIANA MACHADO DA SILVA", horario: "12:00", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
-    { nome: "MARISTELA ROSA DA SILVA", horario: "12:00", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
-    { nome: "CAMILA DE OLIVEIRA QUEIROZ", horario: "12:00", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
-    { nome: "MARILENE DA SILVA NEPOMUCENO", horario: "12:00", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
-    { nome: "POLLYANA RUSSEL PATROCINIO DUTRA", horario: "12:00", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
-    { nome: "JOYCE FARIA DE SOUZA", horario: "12:00", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
-    { nome: "BRUNA DE ALMEIDA FERREIRA", horario: "12:00", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
-    { nome: "LARISSA TEIXEIRA DE LUCENA", horario: "12:00", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
-    { nome: "CAROLINA DA CONCEIÇÃO", horario: "12:00", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
-    { nome: "FRANCISCA JAIRLA DA SILVA PEREIRA", horario: "12:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
-    { nome: "OSANA COSTA PEREIRA", horario: "12:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
-    { nome: "RICARDO JOSE DOS SANTOS DE CASTRO", horario: "12:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
-    { nome: "CIBELLE SILVA MARTINS", horario: "12:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
-    { nome: "RAYANE DOS SANTOS", horario: "12:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
-    { nome: "VIVIANE ALVES DE SOUZA", horario: "12:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
-    { nome: "RENATA CRISTINA EMILIANO BERNARDO", horario: "12:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
-    { nome: "MICHELE GREGORIO DOS SANTOS", horario: "12:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
-    { nome: "GREICE KELLY DOS ANJOS DE OLIVEIRA", horario: "12:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
-    { nome: "LARISSA LEONARDO REIS", horario: "13:00", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
-    { nome: "ALESSANDRA CARVALHAES DE JESUS", horario: "13:00", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
-    { nome: "MYRELA DE JESUS DA SILVA", horario: "13:00", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
-    { nome: "VICTORIA MIRANDA MOREIRA", horario: "13:00", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
-    { nome: "OLINDA SILVA DE SOUSA", horario: "13:00", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
-    { nome: "ALINE MENDONCA DA CONCEICAO", horario: "13:00", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
-    { nome: "RAYANE CRISTINA DE CARVALHO", horario: "13:00", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
-    { nome: "ROBERTA DOS SANTOS TEODORO", horario: "13:00", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
-    { nome: "DÉBORA SANTOS SILVA LIMA", horario: "13:00", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
-    { nome: "THAIZA SOUZA DE QUEIROZ", horario: "13:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
-    { nome: "GABRIELE LORRANE GONÇALVES DE OLIVEIRA MODESTO", horario: "13:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
-    { nome: "ESTEFFANY NATALIA ALEXANDRE NUNES", horario: "13:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
-    { nome: "SILVANA MIGUEL AUGUSTO", horario: "13:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
-    { nome: "DAYANE PEREIRA BARBOSA", horario: "13:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
-    { nome: "TATIANE PEDRO DIAS", horario: "13:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
-    { nome: "ALESSANDRA DA SILVA DA CRUZ", horario: "13:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
-    { nome: "VIVIAN SILVA DE SOUZA", horario: "13:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
-    { nome: "RENATA DO NASCIMENTO MARQUES", horario: "13:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null },
-    { nome: "CAMILA DOS SANTOS MARANHÃO DE CASTRO", horario: "13:30", tipo: "Pensão em Alimentos para Filhos", chegou: false, horaChegada: null }
-];
-let agendamentosEspera = [];
-let agendamentosAtendidos = [];
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciador de Atendimento em Três Listas</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Gerenciador de Atendimento</h1>
 
-// Funções de Ações
-function adicionarNovo() {
-    const nome = document.getElementById('nomeNovo').value;
-    const horario = document.getElementById('horarioNovo').value;
+        <div class="regras-prioridade">
+            <h2>Regras de Prioridade</h2>
+            <p>A lista de atendimento será processada com base nas seguintes prioridades:</p>
+            <ul>
+                <li><strong>Prioridade Máxima:</strong> Pessoas que chegaram no horário agendado ou com antecedência.</li>
+                <li><strong>Prioridade Média:</strong> Pessoas que chegaram com até 20 minutos de atraso.</li>
+                <li><strong>Prioridade Mínima:</strong> Pessoas que chegaram com 30 minutos ou mais de atraso.</li>
+            </ul>
+            <p>Dentro de cada grupo, a ordem original de agendamento é respeitada.</p>
+        </div>
 
-    if (nome && horario) {
-        agendamentosOriginal.push({
-            nome: nome.toUpperCase(),
-            horario: horario,
-            tipo: "Pensão em Alimentos para Filhos",
-            chegou: false,
-            horaChegada: null
-        });
-        agendamentosOriginal.sort((a, b) => a.horario.localeCompare(b.horario));
-        
-        renderizarListaOriginal();
-        document.getElementById('nomeNovo').value = '';
-        document.getElementById('horarioNovo').value = '';
-        alert(`${nome} foi adicionado(a) à lista de agendamentos.`);
-    } else {
-        alert("Por favor, preencha o nome e o horário para adicionar à lista.");
-    }
-}
+        <div class="input-section">
+            <label for="horaChegadaGlobal">Hora de Chegada (Geral):</label>
+            <input type="time" id="horaChegadaGlobal">
+        </div>
 
-function marcarPresenca(index) {
-    const horaChegadaInput = document.getElementById('horaChegadaGlobal');
-    if (!horaChegadaInput.value) {
-        alert("Por favor, insira a hora de chegada primeiro.");
-        return;
-    }
+        <div class="adicionar-pessoa">
+            <h2>Adicionar Pessoa</h2>
+            <label for="nomeNovo">Nome:</label>
+            <input type="text" id="nomeNovo">
+            <label for="horarioNovo">Horário Agendado:</label>
+            <input type="time" id="horarioNovo">
+            <button onclick="adicionarNovo()">Adicionar à Lista</button>
+        </div>
+
+        <div class="list-section">
+            <h2>Lista de Agendamentos Original</h2>
+            <div id="lista-original" class="lista-agendamentos">
+                </div>
+        </div>
+
+        <div class="botoes-salvar">
+            <button onclick="salvarPDFOriginal()">Salvar Lista Original em PDF</button>
+            <button onclick="processarLista()">Processar Lista de Espera</button>
+            <button onclick="salvarPDFEspera()">Salvar Lista de Espera em PDF</button>
+            <button onclick="salvarPDFAtendidos()">Salvar Lista de Atendidos em PDF</button>
+        </div>
+
+        <div class="list-section">
+            <h2>Lista de Aguardando Atendimento</h2>
+            <div id="lista-espera" class="lista-agendamentos">
+                </div>
+        </div>
+
+        <div class="list-section">
+            <h2>Lista de Atendidos</h2>
+            <div id="lista-atendidos" class="lista-agendamentos">
+                </div>
+        </div>
+
+        <div id="saida-pdf-original" class="saida-pdf" style="display: none;">
+            <h2>Lista Original para Impressão</h2>
+            <table id="tabela-pdf-original">
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Horário Agendado</th>
+                        <th>Tipo de Atendimento</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    </tbody>
+            </table>
+        </div>
+
+        <div id="saida-pdf-espera" class="saida-pdf" style="display: none;">
+            <h2>Lista para Impressão (Aguardando Atendimento)</h2>
+            <table id="tabela-pdf-espera">
+                <thead>
+                    <tr>
+                        <th>Chegou</th>
+                        <th>Nome</th>
+                        <th>Horário Agendado</th>
+                        <th>Tipo de Atendimento</th>
+                        <th>Diferença</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    </tbody>
+            </table>
+        </div>
+
+        <div id="saida-pdf-atendidos" class="saida-pdf" style="display: none;">
+            <h2>Lista para Impressão (Atendidos)</h2>
+            <table id="tabela-pdf-atendidos">
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Horário Agendado</th>
+                        <th>Tipo de Atendimento</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    </tbody>
+            </table>
+        </div>
+
+    </div>
     
-    const [item] = agendamentosOriginal.splice(index, 1);
-    item.chegou = true;
-    item.horaChegada = horaChegadaInput.value;
-    agendamentosEspera.push(item);
-
-    renderizarListaOriginal();
-    renderizarListaEspera();
-    
-    alert(`Presença de ${item.nome} marcada para as ${item.horaChegada}.`);
-}
-
-function marcarAtendido(index) {
-    const [item] = agendamentosEspera.splice(index, 1);
-    agendamentosAtendidos.push(item);
-    
-    renderizarListaEspera();
-    renderizarListaAtendidos();
-    
-    alert(`${item.nome} foi marcado como atendido.`);
-}
-
-function calcularDiferenca(horaAgendada, horaChegada) {
-    const [hA, mA] = horaAgendada.split(':').map(Number);
-    const [hC, mC] = horaChegada.split(':').map(Number);
-    
-    const diffMinutos = (hC * 60 + mC) - (hA * 60 + mA);
-    return diffMinutos;
-}
-
-function processarLista() {
-    const listaProcessada = agendamentosEspera.map(item => {
-        const diffMinutos = calcularDiferenca(item.horario, item.horaChegada);
-        return {
-            ...item,
-            diferenca: diffMinutos,
-            posicaoOriginal: agendamentosOriginal.findIndex(p => p.nome === item.nome)
-        };
-    });
-
-    listaProcessada.sort((a, b) => {
-        const diffA = a.diferenca;
-        const diffB = b.diferenca;
-
-        const chegouNoPrazoA = diffA <= 0;
-        const chegouNoPrazoB = diffB <= 0;
-        if (chegouNoPrazoA && !chegouNoPrazoB) return -1;
-        if (!chegouNoPrazoA && chegouNoPrazoB) return 1;
-
-        const atrasoLeveA = diffA > 0 && diffA <= 20;
-        const atrasoLeveB = diffB > 0 && diffB <= 20;
-        if (chegouNoPrazoA && atrasoLeveB) return -1;
-        if (atrasoLeveA && chegouNoPrazoB) return 1;
-
-        const atrasoGraveA = diffA >= 30;
-        const atrasoGraveB = diffB >= 30;
-        if (atrasoLeveA && atrasoGraveB) return -1;
-        if (atrasoGraveA && atrasoLeveB) return 1;
-        if (chegouNoPrazoA && atrasoGraveB) return -1;
-        if (atrasoGraveA && chegouNoPrazoB) return 1;
-        
-        const ordemOriginalA = agendamentosOriginal.findIndex(p => p.nome === a.nome);
-        const ordemOriginalB = agendamentosOriginal.findIndex(p => p.nome === b.nome);
-        return ordemOriginalA - ordemOriginalB;
-    });
-
-    renderizarTabelaPDFEspera(listaProcessada);
-}
-
-
-// Funções de Renderização
-function renderizarListaOriginal() {
-    const listaDiv = document.getElementById('lista-original');
-    listaDiv.innerHTML = '';
-    agendamentosOriginal.forEach((item, index) => {
-        const itemDiv = document.createElement('div');
-        itemDiv.className = 'item-agendamento';
-        itemDiv.innerHTML = `
-            <div class="info">
-                <span>Nome: ${item.nome}</span>
-                <span>Horário: ${item.horario}</span>
-                <span>Tipo: ${item.tipo}</span>
-            </div>
-            <button class="marcar-presenca" onclick="marcarPresenca(${index})">Marcar Presença</button>
-        `;
-        listaDiv.appendChild(itemDiv);
-    });
-}
-
-function renderizarListaEspera() {
-    const listaDiv = document.getElementById('lista-espera');
-    listaDiv.innerHTML = '';
-    agendamentosEspera.forEach((item, index) => {
-        const diffMinutos = calcularDiferenca(item.horario, item.horaChegada);
-        const diferencaFormatada = `${diffMinutos} min`;
-        const itemDiv = document.createElement('div');
-        itemDiv.className = 'item-agendamento';
-        itemDiv.innerHTML = `
-            <div class="info">
-                <span>Nome: ${item.nome}</span>
-                <span>Horário: ${item.horario}</span>
-                <span>Hora Chegada: ${item.horaChegada}</span>
-                <span>Diferença: ${diferencaFormatada}</span>
-            </div>
-            <button class="atendido" onclick="marcarAtendido(${index})">Marcar Atendido</button>
-        `;
-        listaDiv.appendChild(itemDiv);
-    });
-}
-
-function renderizarListaAtendidos() {
-    const listaDiv = document.getElementById('lista-atendidos');
-    listaDiv.innerHTML = '';
-    agendamentosAtendidos.forEach(item => {
-        const itemDiv = document.createElement('div');
-        itemDiv.className = 'item-agendamento atendido-item';
-        itemDiv.innerHTML = `
-            <div class="info">
-                <span>Nome: ${item.nome}</span>
-                <span>Horário: ${item.horario}</span>
-                <span>Tipo: ${item.tipo}</span>
-            </div>
-        `;
-        listaDiv.appendChild(itemDiv);
-    });
-}
-
-// Funções para o PDF
-function salvarPDFOriginal() {
-    renderizarTabelaPDFOriginal(agendamentosOriginal);
-    alert('A prévia da lista original está pronta. Use a função de impressão do seu navegador.');
-    window.print();
-}
-
-function renderizarTabelaPDFOriginal(lista) {
-    document.getElementById('saida-pdf-espera').style.display = 'none';
-    document.getElementById('saida-pdf-atendidos').style.display = 'none';
-
-    const tabelaPDF = document.getElementById('tabela-pdf-original').getElementsByTagName('tbody')[0];
-    tabelaPDF.innerHTML = '';
-    
-    lista.forEach(item => {
-        const newRow = tabelaPDF.insertRow();
-        const cell1 = newRow.insertCell(0);
-        const cell2 = newRow.insertCell(1);
-        const cell3 = newRow.insertCell(2);
-        
-        cell1.textContent = item.nome;
-        cell2.textContent = item.horario;
-        cell3.textContent = item.tipo;
-    });
-    
-    document.getElementById('saida-pdf-original').style.display = 'block';
-}
-
-function salvarPDFEspera() {
-    alert('A prévia da lista de espera está pronta. Use a função de impressão do seu navegador.');
-    window.print();
-}
-
-function renderizarTabelaPDFEspera(lista) {
-    document.getElementById('saida-pdf-original').style.display = 'none';
-    document.getElementById('saida-pdf-atendidos').style.display = 'none';
-
-    const tabelaPDF = document.getElementById('tabela-pdf-espera').getElementsByTagName('tbody')[0];
-    tabelaPDF.innerHTML = '';
-    if (lista.length === 0) {
-        document.getElementById('saida-pdf-espera').style.display = 'none';
-        return;
-    }
-    lista.forEach(item => {
-        const newRow = tabelaPDF.insertRow();
-        const cell1 = newRow.insertCell(0);
-        const cell2 = newRow.insertCell(1);
-        const cell3 = newRow.insertCell(2);
-        const cell4 = newRow.insertCell(3);
-        const cell5 = newRow.insertCell(4);
-
-        const diferencaFormatada = `${item.diferenca} min`;
-
-        cell1.textContent = '✔️';
-        cell2.textContent = item.nome;
-        cell3.textContent = item.horario;
-        cell4.textContent = item.tipo;
-        cell5.textContent = diferencaFormatada;
-    });
-    document.getElementById('saida-pdf-espera').style.display = 'block';
-}
-
-function salvarPDFAtendidos() {
-    renderizarTabelaPDFAtendidos(agendamentosAtendidos);
-    alert('A prévia da lista de atendidos está pronta. Use a função de impressão do seu navegador.');
-    window.print();
-}
-
-function renderizarTabelaPDFAtendidos(lista) {
-    document.getElementById('saida-pdf-original').style.display = 'none';
-    document.getElementById('saida-pdf-espera').style.display = 'none';
-
-    const tabelaPDF = document.getElementById('tabela-pdf-atendidos').getElementsByTagName('tbody')[0];
-    tabelaPDF.innerHTML = '';
-    
-    if (lista.length === 0) {
-        document.getElementById('saida-pdf-atendidos').style.display = 'none';
-        return;
-    }
-    
-    lista.forEach(item => {
-        const newRow = tabelaPDF.insertRow();
-        const cell1 = newRow.insertCell(0);
-        const cell2 = newRow.insertCell(1);
-        const cell3 = newRow.insertCell(2);
-        
-        cell1.textContent = item.nome;
-        cell2.textContent = item.horario;
-        cell3.textContent = item.tipo;
-    });
-    
-    document.getElementById('saida-pdf-atendidos').style.display = 'block';
-}
-
-// Inicializa as listas ao carregar a página
-document.addEventListener("DOMContentLoaded", () => {
-    renderizarListaOriginal();
-    renderizarListaEspera();
-    renderizarListaAtendidos();
-});
+    <script src="script.js"></script>
+</body>
+</html>
